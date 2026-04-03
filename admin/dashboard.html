@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Innovo CMS — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body class="dashboard-page">
+
+<!-- TOAST CONTAINER -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<aside class="sbar" id="sbar">
+  <div class="sbar-top">
+    <div class="sbar-brand-row">
+      <span class="sbar-logo">innovo Labs</span>
+      <div class="sbar-dot"></div>
+    </div>
+    <span class="sbar-lbl">CMS</span>
+  </div>
+  <div class="sg">
+    <span class="sglbl">Content</span>
+    <a class="slnk on" id="sb-articles" onclick="goView('articles')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg>
+      All Articles
+      <span class="scnt" id="sbCnt">0</span>
+    </a>
+    <a class="slnk" id="sb-new" onclick="goView('new')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      New Article
+    </a>
+  </div>
+  <div class="sb-foot">
+    <div class="sb-user">
+      <div class="sb-avatar" id="sbAv"></div>
+      <div class="sb-user-info">
+        <div class="sb-user-name" id="sbUserName"></div>
+        <div class="sb-user-role">Editor</div>
+      </div>
+    </div>
+    <a class="slnk slnk-muted" href="../index.html" target="_blank">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      View Site
+    </a>
+    <a class="slnk slnk-aqua" onclick="openChangePasswordModal()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      Change Password
+    </a>
+    <a class="slnk slnk-danger" onclick="doLogout()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+      Sign Out
+    </a>
+  </div>
+</aside>
+
+<div class="shell" id="shell">
+  <div class="tbar">
+    <button class="ttog" onclick="toggleSidebar()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+    <div class="tbc">
+      <span class="tbc-h" onclick="goView('articles')">innovo Labs</span>
+      <span class="tbc-s">/</span>
+      <span class="tbc-c" id="tbCrumb">Articles</span>
+    </div>
+    <div class="tsp"></div>
+    <a href="../index.html" target="_blank" class="view-site-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      View Site
+    </a>
+    <span class="tusr" id="tbUser"></span>
+    <button class="tnewbtn" onclick="goView('new')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      New Article
+    </button>
+  </div>
+
+  <div class="content" id="mainContent">
+
+    <!-- ── ARTICLES VIEW ── -->
+    <div class="view on" id="view-articles">
+
+      <!-- Stats Row -->
+      <div class="stats-row" id="statsRow">
+        <div class="stat-card">
+          <div class="stat-ico aqua">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div>
+            <div class="stat-num" id="statTotal">0</div>
+            <div class="stat-lbl">Total Articles</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-ico green">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+          </div>
+          <div>
+            <div class="stat-num" id="statVideo">0</div>
+            <div class="stat-lbl">With Video</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-ico amber">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+          </div>
+          <div>
+            <div class="stat-num" id="statFeat">—</div>
+            <div class="stat-lbl">Hero Article</div>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-ico slate">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div>
+            <div class="stat-num" id="statLast">—</div>
+            <div class="stat-lbl">Last Published</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Featured strip -->
+      <div class="featured-strip" id="featuredStrip" style="display:none">
+        <span class="featured-strip-ico">★</span>
+        <span class="featured-strip-txt">Hero article: <b id="featuredTitle">—</b></span>
+        <button class="featured-strip-clr" onclick="clearFeatured()">Remove Hero</button>
+      </div>
+
+      <div class="ah">
+        <div>
+          <div class="attl">All <b>Articles</b></div>
+          <div class="ameta" id="artsMeta">Loading...</div>
+        </div>
+      </div>
+      <div class="grid" id="artGrid"></div>
+      <div class="empty" id="artsEmpty" style="display:none">
+        <div class="ering"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+        <h3>No articles yet</h3>
+        <p>Create your first article to get started.</p>
+        <button class="btn btn-dk" onclick="goView('new')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Create Article</button>
+      </div>
+    </div>
+
+    <!-- ── NEW / EDIT ARTICLE VIEW ── -->
+    <div class="view" id="view-new">
+      <div class="fshell">
+        <div class="ftop">
+          <button class="fbk" onclick="goView('articles')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>Back</button>
+          <div class="fvl"></div>
+          <span class="fttl" id="formTtl">New Article</span>
+        </div>
+        <form id="artForm">
+          <input type="hidden" id="editId">
+          <div class="fcols">
+            <div>
+              <div class="fpnl">
+                <div class="fpnl-hd">
+                  <div class="fpnl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+                  <span class="fpnl-lbl">Article Info</span>
+                </div>
+                <div class="fpnl-bd">
+                  <div class="fg"><label class="flbl">Title <span class="freq">*</span></label><input class="finp" type="text" id="fTitle" placeholder="Enter article title..." required></div>
+                  <div class="fg"><label class="flbl">Short Description <span class="freq">*</span></label><textarea class="ftxt" id="fDesc" placeholder="1-2 sentences shown on the article card" rows="3" required></textarea></div>
+                </div>
+              </div>
+              <div class="fpnl">
+                <div class="fpnl-hd">
+                  <div class="fpnl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/></svg></div>
+                  <span class="fpnl-lbl">Article Body <span class="freq">*</span></span>
+                </div>
+                <div class="fpnl-bd fpnl-bd--editor">
+                  <div class="edwrap">
+                    <div class="edtools" id="edTools">
+                      <select class="ed-select" id="edFontSize" onchange="editorFontSize(this.value)" title="Font size">
+                        <option value="">Size</option>
+                        <option value="1">Small</option>
+                        <option value="3">Normal</option>
+                        <option value="4">Large</option>
+                        <option value="5">X-Large</option>
+                        <option value="6">XX-Large</option>
+                      </select>
+                      <select class="ed-select" id="edHeading" onchange="editorBlock(this.value);this.value=''" title="Heading">
+                        <option value="">Style</option>
+                        <option value="h2">Heading 2</option>
+                        <option value="h3">Heading 3</option>
+                        <option value="h4">Heading 4</option>
+                        <option value="p">Paragraph</option>
+                        <option value="blockquote">Quote</option>
+                      </select>
+                      <div class="ed-sep"></div>
+                      <button type="button" id="btnBold" onclick="editorToggle('bold','btnBold')" title="Bold"><b>B</b></button>
+                      <button type="button" id="btnItalic" onclick="editorToggle('italic','btnItalic')" title="Italic"><i>I</i></button>
+                      <button type="button" id="btnUnderline" onclick="editorToggle('underline','btnUnderline')" title="Underline" style="text-decoration:underline">U</button>
+                      <button type="button" id="btnStrike" onclick="editorToggle('strikeThrough','btnStrike')" title="Strikethrough" style="text-decoration:line-through">S</button>
+                      <div class="ed-sep"></div>
+                      <button type="button" onclick="editorCmd('justifyLeft')" title="Align left"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><line x1="1" y1="4" x2="15" y2="4"/><line x1="1" y1="8" x2="11" y2="8"/><line x1="1" y1="12" x2="13" y2="12"/></svg></button>
+                      <button type="button" onclick="editorCmd('justifyCenter')" title="Center"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><line x1="1" y1="4" x2="15" y2="4"/><line x1="3" y1="8" x2="13" y2="8"/><line x1="2" y1="12" x2="14" y2="12"/></svg></button>
+                      <button type="button" onclick="editorCmd('justifyRight')" title="Align right"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><line x1="1" y1="4" x2="15" y2="4"/><line x1="5" y1="8" x2="15" y2="8"/><line x1="3" y1="12" x2="15" y2="12"/></svg></button>
+                      <div class="ed-sep"></div>
+                      <button type="button" onclick="editorCmd('insertUnorderedList')" title="Bullet list"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><circle cx="2" cy="4" r="1" fill="currentColor" stroke="none"/><line x1="5" y1="4" x2="15" y2="4"/><circle cx="2" cy="8" r="1" fill="currentColor" stroke="none"/><line x1="5" y1="8" x2="15" y2="8"/><circle cx="2" cy="12" r="1" fill="currentColor" stroke="none"/><line x1="5" y1="12" x2="15" y2="12"/></svg></button>
+                      <button type="button" onclick="editorCmd('insertOrderedList')" title="Numbered list"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><text x="1" y="5" font-size="5" fill="currentColor" stroke="none">1.</text><line x1="6" y1="4" x2="15" y2="4"/><text x="1" y="9" font-size="5" fill="currentColor" stroke="none">2.</text><line x1="6" y1="8" x2="15" y2="8"/><text x="1" y="13" font-size="5" fill="currentColor" stroke="none">3.</text><line x1="6" y1="12" x2="15" y2="12"/></svg></button>
+                      <button type="button" onclick="editorCmd('indent')" title="Indent"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><line x1="1" y1="3" x2="15" y2="3"/><polyline points="5,6 8,8 5,10"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="1" y1="13" x2="15" y2="13"/></svg></button>
+                      <button type="button" onclick="editorCmd('outdent')" title="Outdent"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><line x1="1" y1="3" x2="15" y2="3"/><polyline points="8,6 5,8 8,10"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="1" y1="13" x2="15" y2="13"/></svg></button>
+                      <div class="ed-sep"></div>
+                      <button type="button" onclick="editorInsertLink()" title="Insert link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></button>
+                      <button type="button" onclick="editorInsertImage()" title="Insert image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><rect x="3" y="3" width="18" height="15" rx="2"/><path d="M3 15l4-4 4 4 4-5 4 5"/><circle cx="8.5" cy="8.5" r="1.5"/></svg></button>
+                      <input type="file" id="edImgInput" accept="image/*" style="display:none" onchange="editorImageLoaded(this)">
+                      <button type="button" class="ed-btn-clear" onclick="editorClearFormat()" title="Clear formatting">✕ Clear</button>
+                    </div>
+                    <div class="edarea" id="fBody" contenteditable="true" placeholder="Write your article here..."></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="fpnl">
+                <div class="fpnl-hd">
+                  <div class="fpnl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="15" rx="2"/><path d="M3 15l4-4 4 4 4-5 4 5"/><circle cx="8.5" cy="8.5" r="1.5"/></svg></div>
+                  <span class="fpnl-lbl">Thumbnail <span class="freq">*</span></span>
+                </div>
+                <div class="fpnl-bd">
+                  <div class="upzone" id="tZone" onclick="document.getElementById('fThumb').click()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="15" rx="2"/><path d="M3 15l4-4 4 4 4-5 4 5"/></svg>
+                    <div class="upzone-t">Click to upload</div>
+                    <div class="upzone-s">JPG, PNG — 1200×800</div>
+                  </div>
+                  <input type="file" id="fThumb" accept="image/*" style="display:none" onchange="onThumbnailSelected(this)">
+                  <input type="hidden" id="fThData">
+                  <div id="tPrevWrap" style="display:none;position:relative">
+                    <img id="tPrev" class="tprev" alt="">
+                    <div class="thumb-actions">
+                      <button type="button" class="btn btn-ol btn-xs" onclick="document.getElementById('fThumb').click()" ><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>Change</button>
+                      <button type="button" class="btn btn-rm btn-xs" onclick="removeThumbnail()" ><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>Remove</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="fpnl">
+                <div class="fpnl-hd">
+                  <div class="fpnl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+                  <span class="fpnl-lbl">Details</span>
+                </div>
+                <div class="fpnl-bd">
+                  <div class="fg"><label class="flbl">Read Time <span class="freq">*</span></label><div class="rtwrap"><input class="finp" type="number" id="fRT" placeholder="5" min="1" max="60" required><span class="rtsuf">min read</span></div></div>
+                  <div class="fg"><label class="flbl">Date</label><input class="finp" type="date" id="fDate"></div>
+                </div>
+              </div>
+              <div class="fpnl">
+                <div class="fpnl-hd">
+                  <div class="fpnl-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
+                  <span class="fpnl-lbl">Video <span class="fopt">(optional)</span></span>
+                </div>
+                <div class="fpnl-bd">
+                  <div class="vtabs">
+                    <button type="button" class="vtab on" id="vtab-none" onclick="setVideoType('none')">None</button>
+                    <button type="button" class="vtab" id="vtab-upload" onclick="setVideoType('upload')">Upload</button>
+                    <button type="button" class="vtab" id="vtab-youtube" onclick="setVideoType('youtube')">YouTube</button>
+                  </div>
+                  <div class="vpanel on" id="vp-none"><p class="fhint">No video attached.</p></div>
+                  <div class="vpanel" id="vp-upload">
+                    <div class="upzone" id="vZone" onclick="document.getElementById('fVid').click()">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+                      <div class="upzone-t">Click to upload video</div>
+                      <div class="upzone-s">MP4 — max 500MB</div>
+                    </div>
+                    <input type="file" id="fVid" accept="video/*" style="display:none" onchange="onVideoSelected(this)">
+                    <input type="hidden" id="fVidData">
+                    <video id="vPrev" class="vprev" controls style="display:none"></video>
+                    <div id="vProg" style="display:none" class="prog"><div class="ptrk"><div class="pfill" id="pFill"></div></div><span class="ptxt" id="pTxt">Loading...</span></div>
+                  </div>
+                  <div class="vpanel" id="vp-youtube">
+                    <input class="finp" type="text" id="fYT" placeholder="https://www.youtube.com/watch?v=...">
+                    <p class="fhint" class="fhint--spaced">Paste the full YouTube URL.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Sticky publish bar -->
+  <div class="stickybar" id="stickyBar" style="display:none">
+    <span class="fmsg" id="fMsg"></span>
+    <div class="sbacts">
+      <button type="button" class="btn btn-ol" onclick="clearForm()">Clear</button>
+      <button type="button" class="btn btn-dk" id="subBtn" onclick="document.getElementById('artForm').requestSubmit()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        Publish Article
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE MODAL -->
+<div class="dmodal" id="dModal">
+  <div class="dbox">
+    <div class="dico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6M9 6V4h6v2"/></svg></div>
+    <h3>Delete Article</h3>
+    <p>Permanently delete <strong id="dTitle"></strong>? This cannot be undone.</p>
+    <div class="dacts">
+      <button class="btn btn-ol btn-xs" onclick="closeDeleteModal()">Cancel</button>
+      <button class="btn btn-rm btn-xs" id="dConfBtn">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- CHANGE PASSWORD MODAL -->
+<div class="cpmodal" id="cpModal">
+  <div class="cpbox">
+    <h3>Change Password</h3>
+    <p>Update your password for <strong id="cpUsername"></strong></p>
+    <div class="cp-field">
+      <label class="cp-label">Current Password</label>
+      <input class="cp-inp" type="password" id="cpCurrent" placeholder="Enter current password">
+    </div>
+    <div class="cp-field">
+      <label class="cp-label">New Password</label>
+      <input class="cp-inp" type="password" id="cpNew" placeholder="Enter new password">
+    </div>
+    <div class="cp-field">
+      <label class="cp-label">Confirm New Password</label>
+      <input class="cp-inp" type="password" id="cpConfirm" placeholder="Confirm new password">
+    </div>
+    <div class="cp-msg" id="cpMsg"></div>
+    <div class="cp-acts">
+      <button class="btn btn-ol btn-xs" onclick="closeChangePasswordModal()">Cancel</button>
+      <button class="btn btn-dk btn-xs" onclick="doChangePassword()">Update Password</button>
+    </div>
+  </div>
+</div>
+
+
+<script src="cms-users.js"></script>
+<script src="dashboard.js"></script>
+</body>
+</html>

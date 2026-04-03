@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Innovo Innovations — A Better Built Tomorrow</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="bar"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a onclick="window.scrollTo({top:0,behavior:'smooth'})" class="n-logo" style="cursor:pointer">
+    <span class="logo-svg">innovo Labs</span>
+  </a>
+  <div class="n-divider"></div>
+  <div class="n-links">
+    <a onclick="window.scrollTo({top:0,behavior:'smooth'})" style="cursor:pointer" id="nav-home">Home</a>
+    <a onclick="document.getElementById('articles').scrollIntoView({behavior:'smooth'})" style="cursor:pointer" id="nav-articles">Articles</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="h-vid">
+    <!--
+      Replace the src with your own MP4 video file.
+      Put the video file in the same folder as index.html
+      Example: <source src="hero-video.mp4" type="video/mp4">
+    -->
+    <video autoplay muted loop playsinline
+      poster="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1600&q=55">
+      <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+    </video>
+  </div>
+
+  <div class="h-content">
+    <div class="h-tag"><span></span>Construction &amp; Real Estate Innovation</div>
+    <span class="h-logo-svg">innovo Labs</span>
+    <h1 class="h-title">Innovating for a<br><em>better built</em> tomorrow</h1>
+    <p class="h-sub">Pioneering sustainable construction and real estate development across four continents — with technology, people, and purpose at our core.</p>
+    <div class="h-cta">
+      <button class="btn-a" onclick="document.getElementById('articles').scrollIntoView({behavior:'smooth'})">Explore Insights</button>
+    </div>
+  </div>
+
+  <div class="h-scroll">
+    <div class="h-scroll-ln"></div>
+    Scroll
+  </div>
+</section>
+
+<!-- ARTICLES -->
+<section id="articles">
+  <div class="rev">
+    <div class="sec-lbl">Latest Insights</div>
+    <h2 class="sec-ttl">Ideas shaping the <strong>built world</strong></h2>
+  </div>
+
+  <!-- CMS articles render here dynamically -->
+  <div class="a-grid rev" id="cmsGrid"></div>
+
+  <!-- Shown when no articles exist yet -->
+  <div id="cmsEmpty" style="display:none; text-align:center; padding:80px 24px; color:#6f8695;">
+    <svg style="width:48px;height:48px;opacity:.3;margin-bottom:16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+    <p style="font-size:16px;font-weight:300">No articles published yet.</p>
+    <p style="font-size:13px;margin-top:8px">Go to <a href="admin/index.html" style="color:#122023;font-weight:500">Admin Panel</a> to add your first article.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="f-bot">
+    <span class="f-logo">innovo Labs</span>
+    <div class="f-sub">
+      <span>&copy; 2026 Innovo Innovations. All rights reserved.</span>
+      <span><a href="#">Privacy Policy</a> &middot; <a href="#">Terms of Use</a></span>
+    </div>
+  </div>
+</footer>
+
+<!-- ARTICLE MODAL -->
+<div class="modal" id="modal">
+  <button class="m-close" onclick="closeModal()">
+    <svg viewBox="0 0 24 24"><path d="M19 12H5M5 12l7 7M5 12l7-7" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Back
+  </button>
+  <div class="m-body" id="mBody"></div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

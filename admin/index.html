@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Innovo CMS — Sign In</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body class="login-page">
+
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+
+<div class="card">
+  <div class="logo-row">
+    <span class="logo-txt">innovo Labs</span>
+    <div class="logo-dot"></div>
+  </div>
+
+  <div class="card-title">Welcome back</div>
+  <div class="card-sub">Sign in to manage your content</div>
+
+  <form id="loginForm">
+    <div class="field">
+      <label class="field-label">Username</label>
+      <input class="field-input" type="text" id="loginUser"
+        placeholder="Enter your username" autocomplete="username" required>
+    </div>
+    <div class="field">
+      <label class="field-label">Password</label>
+      <div class="pw-wrap">
+        <input class="field-input" type="password" id="loginPass"
+          placeholder="Enter your password" autocomplete="current-password" required>
+        <button type="button" class="pw-eye" onclick="togglePasswordVisibility()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="err-msg" id="loginErr">
+      <svg id="errIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="2" style="display:none">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="15" y1="9" x2="9" y2="15"/>
+        <line x1="9"  y1="9" x2="15" y2="15"/>
+      </svg>
+      <span id="errTxt"></span>
+    </div>
+
+    <button type="submit" class="btn-login">Sign In</button>
+    <button type="button" class="forgot-link" onclick="openForgotPassword()">Forgot password?</button>
+  </form>
+
+  <div class="card-footer">&copy; 2026 Innovo Innovations — All rights reserved</div>
+</div>
+
+<!-- FORGOT PASSWORD OVERLAY -->
+<div class="fp-overlay" id="fpOverlay">
+  <div class="fp-card">
+    <h3>Reset Password</h3>
+    <p>Enter your username and the reset code provided by your admin, then set a new password.</p>
+    <div class="fp-field">
+      <label class="fp-label">Username</label>
+      <input class="fp-input" type="text" id="fpUser" placeholder="Your username">
+    </div>
+    <div class="fp-field">
+      <label class="fp-label">Reset Code</label>
+      <input class="fp-input" type="password" id="fpCode" placeholder="Enter reset code">
+    </div>
+    <div class="fp-field">
+      <label class="fp-label">New Password</label>
+      <input class="fp-input" type="password" id="fpNew" placeholder="Enter new password">
+    </div>
+    <div class="fp-field">
+      <label class="fp-label">Confirm New Password</label>
+      <input class="fp-input" type="password" id="fpConfirm" placeholder="Confirm new password">
+    </div>
+    <div class="fp-msg" id="fpMsg"></div>
+    <div class="fp-acts">
+      <button class="fp-btn-cancel" onclick="closeForgotPassword()">Cancel</button>
+      <button class="fp-btn-submit" onclick="doPasswordReset()">Reset Password</button>
+    </div>
+  </div>
+</div>
+
+<script src="cms-users.js"></script>
+<script>
+
+  /* ── Master reset code ──────────────────────────────────────────
+     Change this string to something secret before going live.     */
+  var RESET_CODE = 'innovo-reset';
+
+  /* ── Redirect if already logged in ─────────────────────────── */
+  if (cms_getSession()) {
+    window.location.href = 'dashboard.html';
+  }
+
+  /* ── Login form submit ──────────────────────────────────────── */
+  document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    var username = document.getElementById('loginUser').value;
+    var password = document.getElementById('loginPass').value;
+    var match    = cms_authenticate(username, password);
+
+    if (match) {
+      cms_setSession({ username: match.username, name: match.name });
+      window.location.href = 'dashboard.html';
+    } else {
+      document.getElementById('errIcon').style.display = 'block';
+      document.getElementById('errTxt').textContent    = 'Incorrect username or password.';
+      document.getElementById('loginPass').value       = '';
+    }
+  });
+
+  /* ── Password visibility toggle ────────────────────────────── */
+  function togglePasswordVisibility() {
+    var input  = document.getElementById('loginPass');
+    input.type = input.type === 'password' ? 'text' : 'password';
+  }
+
+  /* ── Forgot password overlay ────────────────────────────────── */
+  function openForgotPassword() {
+    document.getElementById('fpUser').value      = '';
+    document.getElementById('fpCode').value      = '';
+    document.getElementById('fpNew').value       = '';
+    document.getElementById('fpConfirm').value   = '';
+    document.getElementById('fpMsg').textContent = '';
+    document.getElementById('fpMsg').className   = 'fp-msg';
+    document.getElementById('fpOverlay').classList.add('on');
+  }
+
+  function closeForgotPassword() {
+    document.getElementById('fpOverlay').classList.remove('on');
+  }
+
+  function doPasswordReset() {
+    var username    = document.getElementById('fpUser').value.trim().toLowerCase();
+    var resetCode   = document.getElementById('fpCode').value.trim();
+    var newPassword = document.getElementById('fpNew').value;
+    var confirmPass = document.getElementById('fpConfirm').value;
+    var msgEl       = document.getElementById('fpMsg');
+
+    var user = INNOVO_USERS.find(function(u) {
+      return u.username.toLowerCase() === username;
+    });
+
+    if (!user) {
+      msgEl.textContent = 'Username not found.';
+      msgEl.className   = 'fp-msg err';
+      return;
+    }
+    if (resetCode !== RESET_CODE) {
+      msgEl.textContent = 'Incorrect reset code.';
+      msgEl.className   = 'fp-msg err';
+      return;
+    }
+    if (newPassword.length < 6) {
+      msgEl.textContent = 'Password must be at least 6 characters.';
+      msgEl.className   = 'fp-msg err';
+      return;
+    }
+    if (newPassword !== confirmPass) {
+      msgEl.textContent = 'Passwords do not match.';
+      msgEl.className   = 'fp-msg err';
+      return;
+    }
+
+    user.password = newPassword;
+    cms_savePasswordOverride(user.username, newPassword);
+
+    msgEl.textContent = '✓ Password reset! You can now sign in.';
+    msgEl.className   = 'fp-msg ok';
+    setTimeout(closeForgotPassword, 2000);
+  }
+
+  /* Close overlay when clicking the backdrop */
+  document.getElementById('fpOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closeForgotPassword();
+  });
+
+</script>
+</body>
+</html>
