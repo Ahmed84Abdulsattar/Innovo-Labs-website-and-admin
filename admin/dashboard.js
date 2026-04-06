@@ -450,17 +450,40 @@ function editorToggle(command, buttonId) {
 
 /* Keep toolbar buttons in sync with cursor position */
 document.addEventListener('selectionchange', function() {
-  var commands   = ['bold', 'italic', 'underline', 'strikeThrough'];
-  var buttonIds  = ['btnBold', 'btnItalic', 'btnUnderline', 'btnStrike'];
+  var editor    = document.getElementById('fBody');
+  var selection = window.getSelection();
+  var commands  = ['bold', 'italic', 'underline', 'strikeThrough'];
+  var buttonIds = ['btnBold', 'btnItalic', 'btnUnderline', 'btnStrike'];
+
+  /* Only query format state when cursor is actually inside the editor */
+  var inside = editor &&
+               selection &&
+               selection.rangeCount > 0 &&
+               editor.contains(selection.getRangeAt(0).commonAncestorContainer);
 
   commands.forEach(function(cmd, index) {
     var button = document.getElementById(buttonIds[index]);
-    if (button) {
+    if (!button) return;
+    if (inside) {
       try { button.classList.toggle('ed-on', document.queryCommandState(cmd)); }
-      catch (e) { /* execCommand can throw in some edge cases */ }
+      catch (e) {}
+    } else {
+      button.classList.remove('ed-on');
     }
   });
 });
+
+
+/* ── Word count ── */
+function updateWordCount() {
+  var editor = document.getElementById('fBody');
+  var counter = document.getElementById('edWordCount');
+  if (!editor || !counter) return;
+  var text = editor.innerText.trim();
+  var words = text ? text.split(/\s+/).filter(function(w){ return w.length > 0; }).length : 0;
+  counter.textContent = words + (words === 1 ? ' word' : ' words');
+}
+document.getElementById('fBody').addEventListener('input', updateWordCount);
 
 
 /* ════════════════════════════════════════════════════════════════

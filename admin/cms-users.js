@@ -14,7 +14,7 @@
    ═══════════════════════════════════════════════════════════════ */
 
 var INNOVO_USERS = [
-  { username: 'admin', password: 'something-strong-here', name: 'Admin'  },
+  { username: 'admin', password: 'innovo2026',   name: 'Admin'  },
   { username: 'ahmed', password: 'something-strong-here',   name: 'Ahmed'  },
   { username: 'sarah', password: 'something-strong-here',   name: 'Sarah'  },
   { username: 'james', password: 'something-strong-here',   name: 'James'  }
